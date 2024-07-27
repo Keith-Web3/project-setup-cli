@@ -1,15 +1,16 @@
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
+import { setup } from './utils.js'
 
 console.log('commands')
 
 yargs(hideBin(process.argv))
   .command(
-    'create <framework/library>',
+    'create <framework> <name>',
     'create new project',
     () => {},
     argv => {
-      console.info(argv)
+      setup(argv.name, argv.framework)
     }
   )
   .demandCommand(1)
