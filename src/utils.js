@@ -1,5 +1,4 @@
-import { spawn, exec } from 'node:child_process'
-import path from 'node:path'
+import { spawn } from 'node:child_process'
 
 export const setup = function (name, framework, tags) {
   const lang = framework.trim().toLowerCase()
