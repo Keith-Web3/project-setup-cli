@@ -13,11 +13,12 @@ yargs(hideBin(process.argv))
       })
     },
     argv => {
-      const tags = argv.tags.split(' ').reduce((acc, curr) => {
-        const newVal = curr.trim()
-        if ('  '.includes(newVal)) return acc
-        return [...acc, `--${newVal}`]
-      }, [])
+      const tags =
+        argv.tags?.split(' ').reduce((acc, curr) => {
+          const newVal = curr.trim()
+          if ('  '.includes(newVal)) return acc
+          return [...acc, `--${newVal}`]
+        }, []) || []
 
       setup(argv.name, argv.framework, tags)
     }
