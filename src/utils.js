@@ -29,6 +29,35 @@ export const setup = function (name, framework, tags) {
       shell: true,
     })
 
+    child.on('data', data => {
+      console.log(`stdout: ${data}`)
+    })
+
+    child.on('error', error => {
+      console.error(`Error: ${error.message}`)
+    })
+
+    child.on('exit', code => {
+      console.log(`Child process exited with code ${code}`)
+    })
+  }
+
+  if (lang === 'reactjs') {
+    const command = 'npm'
+    let template = tags.map(tag => tag.slice(2))
+
+    if (!template.length) template = ['react-ts']
+    const args = ['create-vite@latest', name, '--', '--template', template]
+
+    const child = spawn(command, args, {
+      stdio: 'inherit',
+      shell: true,
+    })
+
+    child.on('data', data => {
+      console.log(`stdout: ${data}`)
+    })
+
     child.on('error', error => {
       console.error(`Error: ${error.message}`)
     })
