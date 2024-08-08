@@ -1,4 +1,6 @@
 import { spawn } from 'node:child_process'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 
 const NEXTJS_DEFAULT_TAGS = [
   '--ts',
@@ -37,8 +39,34 @@ export const setup = function (name, framework, tags) {
       console.error(`Error: ${error.message}`)
     })
 
-    child.on('exit', code => {
-      console.log(`Child process exited with code ${code}`)
+    child.on('close', async () => {
+      const currDir = await getCurrentDirectory()
+
+      const delImg = fs.unlink(path.join(currDir, `${name}/public/next.svg`))
+      console.log('deleted next svg')
+
+      const globalcssDir = path.join(currDir, `${name}/src/app/globals.css`)
+
+      let clearGlobal
+      if (tags.includes('--tailwind')) {
+        clearGlobal = fs.writeFile(
+          globalcssDir,
+          '@tailwind base;\n@tailwind components;\n@tailwind utilities;',
+          'utf-8'
+        )
+      } else {
+        clearGlobal = fs.writeFile(globalcssDir, '', 'utf-8')
+      }
+      const delCssModule = fs.unlink(
+        path.join(currDir, `${name}/src/app/page.module.css`)
+      )
+
+      const clearHomePage = fs.writeFile(
+        path.join(currDir, `${name}/src/app/page.tsx`),
+        `export default function Home() {\n\treturn 'hello world'\n}`
+      )
+
+      await Promise.all([delImg, clearGlobal, delCssModule, clearHomePage])
     })
   }
 
