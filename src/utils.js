@@ -66,7 +66,12 @@ export const setup = function (name, framework, tags) {
         `export default function Home() {\n\treturn 'hello world'\n}`
       )
 
-      await Promise.all([delImg, clearGlobal, delCssModule, clearHomePage])
+      await Promise.allSettled([
+        delImg,
+        clearGlobal,
+        delCssModule,
+        clearHomePage,
+      ])
     })
   }
 
